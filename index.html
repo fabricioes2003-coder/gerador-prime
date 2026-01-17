@@ -2,31 +2,99 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Gerador Prime</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador Prime 🚀</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #0f172a;
-      color: #f8fafc;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .box {
+      color: #fff;
       text-align: center;
+      padding: 30px;
     }
+
     h1 {
-      color: #38bdf8;
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      margin-bottom: 20px;
+    }
+
+    input, select, button {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 6px;
+      border: none;
+      font-size: 14px;
+    }
+
+    button {
+      cursor: pointer;
+      background: #22c55e;
+      color: #000;
+      font-weight: bold;
+    }
+
+    canvas {
+      border-radius: 12px;
+      margin-top: 20px;
+      background: #000;
     }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h1>Gerador Prime 🚀</h1>
-    <p>Site publicado com sucesso no GitHub Pages.</p>
+
+  <h1>Gerador Prime 🚀</h1>
+  <p>Gerador de banners automático</p>
+
+  <div class="controls">
+    <input type="text" id="titulo" placeholder="Título do banner">
+    <br>
+    <input type="text" id="subtitulo" placeholder="Subtítulo">
+    <br>
+    <select id="cor">
+      <option value="#2563eb">Azul</option>
+      <option value="#16a34a">Verde</option>
+      <option value="#dc2626">Vermelho</option>
+      <option value="#9333ea">Roxo</option>
+      <option value="#000000">Preto</option>
+    </select>
+    <br>
+    <button onclick="gerarBanner()">Gerar Banner</button>
+    <button onclick="baixarBanner()">Baixar</button>
   </div>
+
+  <canvas id="banner" width="800" height="450"></canvas>
+
+  <script>
+    const canvas = document.getElementById("banner");
+    const ctx = canvas.getContext("2d");
+
+    function gerarBanner() {
+      const titulo = document.getElementById("titulo").value;
+      const subtitulo = document.getElementById("subtitulo").value;
+      const cor = document.getElementById("cor").value;
+
+      ctx.fillStyle = cor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
+
+      ctx.font = "bold 48px Arial";
+      ctx.fillText(titulo, canvas.width / 2, 200);
+
+      ctx.font = "24px Arial";
+      ctx.fillText(subtitulo, canvas.width / 2, 260);
+    }
+
+    function baixarBanner() {
+      const link = document.createElement("a");
+      link.download = "banner-gerador-prime.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+  </script>
+
 </body>
 </html>
