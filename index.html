@@ -1,100 +1,142 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Gerador Prime 🚀</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: #fff;
-      text-align: center;
-      padding: 30px;
-    }
-
-    h1 {
-      margin-bottom: 10px;
-    }
-
-    .controls {
-      margin-bottom: 20px;
-    }
-
-    input, select, button {
-      padding: 10px;
-      margin: 5px;
-      border-radius: 6px;
-      border: none;
-      font-size: 14px;
-    }
-
-    button {
-      cursor: pointer;
-      background: #22c55e;
-      color: #000;
-      font-weight: bold;
-    }
-
-    canvas {
-      border-radius: 12px;
-      margin-top: 20px;
-      background: #000;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Gerador Prime 🚀</title>
+<style>
+body { font-family: Arial, sans-serif; background:#f4f4f4; text-align:center; padding:20px; }
+canvas { border:1px solid #ccc; margin-top:20px; }
+input, select, button { margin:5px; padding:8px; font-size:16px; }
+</style>
 </head>
 <body>
 
-  <h1>Gerador Prime 🚀</h1>
-  <p>Gerador de banners automático</p>
+<h1>Gerador Prime 🚀</h1>
 
-  <div class="controls">
-    <input type="text" id="titulo" placeholder="Título do banner">
-    <br>
-    <input type="text" id="subtitulo" placeholder="Subtítulo">
-    <br>
-    <select id="cor">
-      <option value="#2563eb">Azul</option>
-      <option value="#16a34a">Verde</option>
-      <option value="#dc2626">Vermelho</option>
-      <option value="#9333ea">Roxo</option>
-      <option value="#000000">Preto</option>
-    </select>
-    <br>
-    <button onclick="gerarBanner()">Gerar Banner</button>
-    <button onclick="baixarBanner()">Baixar</button>
-  </div>
+<label>Categoria:</label>
+<select id="categoria">
+  <option value="futebol">Futebol</option>
+  <option value="filmes">Filmes</option>
+  <option value="series">Séries</option>
+</select>
 
-  <canvas id="banner" width="800" height="450"></canvas>
+<label>Modelo:</label>
+<select id="modelo">
+  <option value="1">Modelo 1</option>
+  <option value="2">Modelo 2</option>
+  <option value="3">Modelo 3</option>
+  <option value="4">Modelo 4</option>
+  <option value="5">Modelo 5</option>
+</select>
 
-  <script>
-    const canvas = document.getElementById("banner");
-    const ctx = canvas.getContext("2d");
+<br>
 
-    function gerarBanner() {
-      const titulo = document.getElementById("titulo").value;
-      const subtitulo = document.getElementById("subtitulo").value;
-      const cor = document.getElementById("cor").value;
+<input type="text" id="contato" placeholder="Seu contato ou Link na Bio">
+<input type="file" id="logo">
 
-      ctx.fillStyle = cor;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+<br>
+<button onclick="gerarBanner()">Gerar Banner</button>
+<button onclick="baixarBanner()">Baixar Banner</button>
 
-      ctx.fillStyle = "#ffffff";
-      ctx.textAlign = "center";
+<canvas id="banner" width="800" height="450"></canvas>
 
-      ctx.font = "bold 48px Arial";
-      ctx.fillText(titulo, canvas.width / 2, 200);
+<script>
+const canvas = document.getElementById("banner");
+const ctx = canvas.getContext("2d");
 
-      ctx.font = "24px Arial";
-      ctx.fillText(subtitulo, canvas.width / 2, 260);
+// Dados simulados
+const jogosFutebol = [
+  {time1:"Barcelona", time2:"Real Madrid", data:"17/01"},
+  {time1:"Bayern", time2:"Dortmund", data:"17/01"},
+  {time1:"Juventus", time2:"Inter", data:"17/01"},
+  {time1:"PSG", time2:"Marseille", data:"17/01"},
+  {time1:"Liverpool", time2:"Chelsea", data:"17/01"}
+];
+
+const filmes = [
+  {titulo:"Avatar 3", data:"22/01/2026"},
+  {titulo:"Matrix 5", data:"25/01/2026"}
+];
+
+const series = [
+  {titulo:"Stranger Things S6", data:"20/01/2026"},
+  {titulo:"The Witcher S4", data:"23/01/2026"}
+];
+
+function gerarBanner() {
+  const categoria = document.getElementById("categoria").value;
+  const modelo = document.getElementById("modelo").value;
+  const contato = document.getElementById("contato").value || "Link na Bio";
+  const logoFile = document.getElementById("logo").files[0];
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  let titulo = "", subtitulo = "", cor = "#333";
+
+  if(categoria==="futebol"){
+    const jogo = jogosFutebol[Math.floor(Math.random()*jogosFutebol.length)];
+    titulo = `${jogo.time1} x ${jogo.time2}`;
+    subtitulo = `Data: ${jogo.data}`;
+
+    // Templates futebol
+    switch(modelo){
+      case "1": cor="#2563eb"; break;
+      case "2": cor="#16a34a"; break;
+      case "3": cor="#dc2626"; break;
+      case "4": cor="#f59e0b"; break;
+      case "5": cor="#8b5cf6"; break;
     }
+  } else if(categoria==="filmes"){
+    const filme = filmes[Math.floor(Math.random()*filmes.length)];
+    titulo = filme.titulo;
+    subtitulo = `Lançamento: ${filme.data}`;
+    cor = modelo==="1" ? "#f43f5e" : "#10b981";
+  } else if(categoria==="series"){
+    const serie = series[Math.floor(Math.random()*series.length)];
+    titulo = serie.titulo;
+    subtitulo = `Episódio: ${serie.data}`;
+    cor = modelo==="1" ? "#3b82f6" : "#f97316";
+  }
 
-    function baixarBanner() {
-      const link = document.createElement("a");
-      link.download = "banner-gerador-prime.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
+  // Fundo
+  ctx.fillStyle = cor;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  // Texto principal
+  ctx.fillStyle="#fff";
+  ctx.font="bold 50px Arial";
+  ctx.textAlign="center";
+  ctx.fillText(titulo, canvas.width/2, 150);
+
+  // Subtítulo
+  ctx.font="28px Arial";
+  ctx.fillText(subtitulo, canvas.width/2, 220);
+
+  // Contato do revendedor
+  ctx.font="22px Arial";
+  ctx.fillText(contato, canvas.width/2, canvas.height-40);
+
+  // Logo
+  if(logoFile){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const img = new Image();
+      img.onload = function(){
+        ctx.drawImage(img, canvas.width-120, canvas.height-80, 100, 50);
+      }
+      img.src = e.target.result;
     }
-  </script>
+    reader.readAsDataURL(logoFile);
+  }
+}
+
+function baixarBanner(){
+  const link = document.createElement("a");
+  link.download = "banner-gerador-prime.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+</script>
 
 </body>
 </html>
